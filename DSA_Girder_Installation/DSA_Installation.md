@@ -101,11 +101,11 @@ sudo chown dgutman /opt/MONGO_LOCAL
 
 ## The log directories will be stored in /opt/Histomics_DATA/logs useful for debugging
 
+~~~
 sudo mkdir /opt/Histomics_DATA
-
 sudo chmod g+s /opt/Histomics_DATA
-
 sudo chown dsaadmin /opt/Histomics_DATA
+~~~
 
 ## Create assetstore directory
 
