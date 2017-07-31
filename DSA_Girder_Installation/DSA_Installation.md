@@ -80,13 +80,6 @@ cd Histomics_SRC
 cd ansible
 ~~~~
 
-
-
-
-
-pip install docker-py
-
-
 To get information on how to install Histomics, there's a deploy_docker.py in the
 ansible directory
 
@@ -122,7 +115,6 @@ sudo chown dsaadmin /opt/LOCAL_ASSETSTORE
 
 ## maybe put everythin in DSAData  ???
 
-
 ### Default User and password
 on initial creation, the userid=admin and password=password
 Obviously, this is not very secure.  So we <i>strongly</i> recommend you change
@@ -133,9 +125,7 @@ you do any upgrades to the main docker image.
 
 ![](assets\DSA_Installation-694b1617.png)assets/DSA_Installation-694b1.png
 
-
 python deploy_docker.py start --retry --password= --db=/opt/MONGO_LOCAL/girder_db --assetstore=/opt/LOCAL_ASSETSTORE/girderAssetStore1 --logs=/opt/Histomics_DATA/logs --port=8080 -e /SLIDES:BOHR_SLIDES:ro  -e /TCGA_MIRROR:TCGA_MIRROR:ro  -e /opt/LOCAL_ASSETSTORE/SRC_GLOBAL_SCRATCH/DCM_STORAGE:LOCAL_DCM_STORAGE:rw
-
 
 # Mounting File Systems within a docker container
 
@@ -149,8 +139,6 @@ However Girder also allows you to Import images.  In this case, the images / fil
 still reside on the original file system but are indexed in Girder.  This can have
 a number of advantages as we leave the original files untouched.  This made it easier
 for me to backup my slide files and also useful for testing.  
-
-
 
 Viewing Label Images  **WARNING**
 Experimental-- view macro images
