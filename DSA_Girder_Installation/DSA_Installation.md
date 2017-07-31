@@ -113,6 +113,10 @@ sudo mkdir /opt/LOCAL_ASSETSTORE
 
 sudo chown dsaadmin /opt/LOCAL_ASSETSTORE
 
+## Create a directory for Mongo
+sudo mkdir /opt/MONGO_LOCAL 
+sudo chown dsaadmin /opt/MONGO_LOCAL
+
 ## maybe put everythin in DSAData  ???
 
 ### Default User and password
