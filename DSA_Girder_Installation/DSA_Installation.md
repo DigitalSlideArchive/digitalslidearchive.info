@@ -61,10 +61,13 @@ sudo usermod -a -G docker dsaadmin
 exit
 ~~~~
 
-Login again as dsaadmin and run the command
+Now Login again as dsaadmin and run the command
 `docker ps`
 
 ### Now clone the Histomics Repo
+We have opt'ed (pun intended) to install the Histomics/Girder installation into the /opt directory on our system
+Please note it's important to make sure the dsaadmin user had the proper permissions to read/write into whatever
+directories you create for these installation files
 
 ~~~~
 cd /opt
