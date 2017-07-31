@@ -39,7 +39,12 @@ sudo pip install --upgrade pip
 pip install docker-py ansible --user
 ~~~~
 
+## Please note, you need to be a member of the docker group in order to check the status of docker containers; also you have to LOG OFF and then LOG BACK IN after adding the admin user to the docker group in order for the permissions to be properly updated
 
+~~~
+usermod -a -G docker dsaadmin
+logout
+~~~
 
 Check and see if docker is running...
 ~~~~
