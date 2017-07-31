@@ -18,6 +18,10 @@ We recommend upgrading the system
 
 I created a default username (dsaadmin) during my initial installation with sudo access.
 
+~~~
+usermod -a -G sudo dsaadmin
+~~~
+
 #### Step 2
 Install Docker: Please note on Ubuntu 14.04 it's docker not docker.io
 I also upgraded pip after installing it, as it indicated I was using an older
