@@ -109,9 +109,10 @@ sudo chown dsaadmin /opt/Histomics_DATA
 
 ## Create assetstore directory
 
-sudo mkdir /opt/LOCAL_ASSETSTORE
-
+~~~
+sudo mkdir /opt/LOCAL_ASSETSTORE  
 sudo chown dsaadmin /opt/LOCAL_ASSETSTORE
+~~~
 
 ## Create a directory for Mongo
 sudo mkdir /opt/MONGO_LOCAL 
