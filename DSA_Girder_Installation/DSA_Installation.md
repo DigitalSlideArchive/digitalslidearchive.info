@@ -3,41 +3,38 @@
 ### Installation Requirements:
 
 1) Root access  
-2) Ubuntu 16.04 Machine (although very likely other platworks will work, testing coming soon)
+2) Ubuntu 16.04 Machine (although very likely other platworks will work, testing coming as requested)
 
 ### Further notes on Installation
 
 All of the scripts needed for installation are available on the main HistomicsTK
 website ( add git link).  We are using Dockerized containers which should make
-simpler and faster.  This won't require building the entire software stack,
+simpler and faster.  Thism won't require building the entire software stack,
 as they are prebuilt when you pull them from Docker Hub.  
 
-#### Step 1
-We recommend upgrading the system  
-  apt-get update && apt-get upgrade
+### Step 1
 
-I created a default username (dsaadmin) during my initial installation with sudo access.
+We recommend upgrading the system.
 
-~~~
-usermod -a -G sudo dsaadmin
-~~~
+```sudo apt-get update && sudo apt-get upgrade```
+
+I created a default username (dsaadmin) during my initial installation with sudo access.  
+
+sudo useradd dsaadmin  
+sudo passwd dsaadmin  
+#####Type in password for dsaadmin  
+sudo usermod -a -G sudo dsaadmin
+
 
 #### Step 2
-Install Docker: Please note on Ubuntu 14.04 it's docker not docker.io
-I also upgraded pip after installing it, as it indicated I was using an older
-version.
+Install Docker:  These instructions assume your using Ubuntu 16.04.
 
-~~~~
-sudo apt-get install docker.io python-pip
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev
-sudo pip install --upgrade pip
-~~~~
+```sudo apt-get install docker.io python-pip sudo apt-get install build-essential libssl-dev libffi-dev python-dev  sudo pip install --upgrade pip        ```
 
 ### Now that we have pip, need to install docker-py and ansible into user space
-
-~~~~
+```bash
 pip install docker-py ansible --user
-~~~~
+```
 
 ## Please note, you need to be a member of the docker group in order to check the status of docker containers; also you have to LOG OFF and then LOG BACK IN after adding the admin user to the docker group in order for the permissions to be properly updated
 
@@ -115,7 +112,7 @@ sudo chown dsaadmin /opt/LOCAL_ASSETSTORE
 ~~~
 
 ## Create a directory for Mongo
-sudo mkdir /opt/MONGO_LOCAL 
+sudo mkdir /opt/MONGO_LOCAL
 sudo chown dsaadmin /opt/MONGO_LOCAL
 
 ## maybe put everythin in DSAData  ???
@@ -162,3 +159,15 @@ assets/DSA_Installation-c8460.png
 
 
 assets/DSA_Installation-c8460.png
+
+
+## Ubuntu 14.04 Notes
+
+Please note on Ubuntu 14.04 it's docker not docker.io
+I also upgraded pip after installing it, as it indicated I was using an older
+version.
+
+
+
+###TO DO
+  Add Ubuntu 14.04 instructions/modifications
