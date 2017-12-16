@@ -20,16 +20,22 @@ We recommend upgrading the system.
 
 I created a default username (dsaadmin) during my initial installation with sudo access.  
 
-sudo useradd dsaadmin  
-sudo passwd dsaadmin  
-#####Type in password for dsaadmin  
+```bash
+sudo useradd dsaadmin
+sudo passwd dsaadmin
+##Type in password for dsaadmin
 sudo usermod -a -G sudo dsaadmin
+```
 
 
-#### Step 2
+### Step 2
 Install Docker:  These instructions assume your using Ubuntu 16.04.
 
-```sudo apt-get install docker.io python-pip sudo apt-get install build-essential libssl-dev libffi-dev python-dev  sudo pip install --upgrade pip        ```
+```bash
+sudo apt-get install docker.io python-pip
+sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+sudo pip install --upgrade pip
+```
 
 ### Now that we have pip, need to install docker-py and ansible into user space
 ```bash
@@ -39,7 +45,7 @@ pip install docker-py ansible --user
 ## Please note, you need to be a member of the docker group in order to check the status of docker containers; also you have to LOG OFF and then LOG BACK IN after adding the admin user to the docker group in order for the permissions to be properly updated
 
 ~~~
-usermod -a -G docker dsaadmin
+sudo usermod -a -G docker dsaadmin
 logout
 ~~~
 
@@ -69,6 +75,7 @@ directories you create for these installation files
 ~~~~
 cd /opt
 sudo mkdir /opt/Histomics_SRC
+sudo chown dsaadmin:dsaadmin Histomics_SRC
 
 #now clone the repo
 git clone https://github.com/DigitalSlideArchive/HistomicsTK.git Histomics_SRC/
@@ -78,7 +85,7 @@ cd ansible
 ~~~~
 
 To get information on how to install Histomics, there's a deploy_docker.py in the
-ansible directory
+ansible directory.  This helper script allows you to pull the latest histomicsTK images, and stop and start all the associated docker containers
 
 ~~~~
 python deploy_docker.py --help
