@@ -9,4 +9,15 @@ difficult to find anything.  So to create a validation scheme, for a given colle
 Also, this folder is going to have a JSON object called # ProjectScheme that I use to keep track of the properties
 I want to validate and/or use for virtual folders.
 
+As an example, I have .projectMetadata and 
+
+projectSchema
+{
+    "validStains": [
+        "HE",
+        "NISSL",
+        "BISSL",
+        "DISSL"
+    ]
+}
 
