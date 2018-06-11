@@ -19,11 +19,11 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/#prerequisites
    
    
  
-   sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
+    sudo apt-get install \
+     apt-transport-https \
+      ca-certificates \
+     curl \
+     software-properties-common
    
 
  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo -E apt-key add -
