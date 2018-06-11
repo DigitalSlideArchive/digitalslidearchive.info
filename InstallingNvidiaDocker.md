@@ -43,3 +43,15 @@ Some of my GPU servers are behind a proxy, so I head to type this in first
 
 export https_proxy='https://170.140.138.165:8000/'
 export http_proxy='http://170.140.138.165:8000/'
+
+#### Now install docker CE
+    sudo apt-get install docker-ce
+    
+    
+#### Actually using docker!
+
+so 'docker ps' should show you a list of running containers; however you can only access docker if you are a member of the docker user group
+
+    sudo usermod -a -G docker dagutman
+    
+Adds userid dagutman to the docker group; however you still have to log off then relog back in so the new group permissions are actually applied to your session
