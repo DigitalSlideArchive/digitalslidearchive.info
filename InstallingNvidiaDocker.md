@@ -55,3 +55,14 @@ so 'docker ps' should show you a list of running containers; however you can onl
     sudo usermod -a -G docker dagutman
     
 Adds userid dagutman to the docker group; however you still have to log off then relog back in so the new group permissions are actually applied to your session
+
+
+
+### WHEN WEIRD STUFF HAPPENS
+
+Curl stopped working for some reason after I rebooted
+
+    sudo apt-get install libcurl4-openssl-dev
+
+Seemed to fix it
+
