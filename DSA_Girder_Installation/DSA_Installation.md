@@ -3,7 +3,7 @@
 ### Installation Requirements:
 
 1) Root access  
-2) Ubuntu 16.04 Machine (although very likely other platworks will work, testing coming as requested)
+2) Ubuntu 16.04 Machine (although very likely other platforms will work, testing coming as requested)
 
 ### Further notes on Installation
 
@@ -28,18 +28,30 @@ I created a default username (dsaadmin) during my initial installation with sudo
 ```bash
 sudo useradd dsaadmin
 sudo passwd dsaadmin
-##Type in password for dsaadmin
+##Type in a password for the dsaadmin user
 sudo usermod -a -G sudo dsaadmin```
 
 You then want to logout and log in as the dsaadmin usermod
 
-
 ### Step 2
 Install Docker:  These instructions assume your using Ubuntu 16.04.
+Instructions have been modified to note the docker-ce installation, as apparently the docker version in Ubuntu 16.04 is now old
 
+Directors for Docker were from here:
+https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
 ```bash
-sudo apt-get install docker.io python-pip
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+sudo apt-get install apt-transport-https \
+    ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) \
+  stable"
+sudo apt-get update
+sudo apt-get install docker-ce
+
+
+sudo apt-get install  python-pip build-essential libssl-dev libffi-dev python-dev
 sudo pip install --upgrade pip
 ```
 
@@ -96,9 +108,9 @@ ansible directory.  This helper script allows you to pull the latest histomicsTK
 ~~~~
 python deploy_docker.py --help
 ~~~~
-![](assets\DSA_Installation-95e35e3f.png)assets/DSA_Installation-95e35.png
+![](assets/DSA_Installation-f8c4c.png)
 
-#### Actually pull the doecker containers
+#### Actually pull the docker containers
 ~~~~
 python deploy_docker.py pull
 ~~~~
@@ -116,16 +128,14 @@ python deploy_docker.py start
 So by default, when you start a new DSA/Girder instance it will create the following directories.
 
 assetstore -> Where girder stores items/files/"stuff" that I've uploaded  
-db --> where the mongoDB lives; mongo is running in a container so it needs to have a persistent location where the data is stored and can be backed up  
-logs --> logs/errors/etc. get placed here
-
+db -> where the mongoDB lives; mongo is running in a container so it needs to have a persistent location where the data is stored and can be backed up  
+logs -> logs/errors/etc. get placed here
 
 ![](assets/DSA_Installation-40f14.png)
 
+So I prefer to specify where the logs, Mongo database, and assetstores (storage space the DSA uses for files/items) live on my file system.  By default it will create all of this for you in
 
-So I prefer to specify where the logs, mongo database, and assetstores (storage space the DSA uses for files/items) live on my file system.  By default it will create all of this for you in
-
-~/.histomics so in our case if I look in
+~/.histomicstk so in our case if I look in
 /home/dsaadmin/.histomicstk
 
 
@@ -133,16 +143,16 @@ So I prefer to specify where the logs, mongo database, and assetstores (storage 
 The Mongo Database should be stored in a directory outside of the actual docker
 container, as an example I am storing it in /opt/MONGO_LOCAL
 
-sudo mkdir /opt/MONGO_LOCAL
+```sudo mkdir /opt/MONGO_LOCAL
 sudo chown dsaadmin /opt/MONGO_LOCAL
-mkdir /opt/MONGO_LOCAL/logs
+mkdir /opt/MONGO_LOCAL/logs```
 
-## The log directories will be stored in /opt/Histomics_DATA/logs useful for debugging
+## The log directories will be stored in /opt/Histomics_Data/logs which contains useful info  for debugging
 
 ~~~
-sudo mkdir /opt/Histomics_DATA
-sudo chmod g+s /opt/Histomics_DATA
-sudo chown dsaadmin /opt/Histomics_DATA
+sudo mkdir /opt/Histomics_Data
+sudo chmod g+s /opt/Histomics_Data
+sudo chown dsaadmin /opt/Histomics_Data
 ~~~
 
 ## Create assetstore directory
@@ -154,24 +164,26 @@ mkdir /opt/LOCAL_ASSETSTORE/girderAssetStore
 ~~~
 
 ## Create a directory for Mongo
-sudo mkdir /opt/MONGO_LOCAL
-sudo chown dsaadmin /opt/MONGO_LOCAL
-mkdir /opt/MONGO_LOCAL/girder_db  
+
+```sudo mkdir /opt/MONGO_LOCAL
+   sudo chown dsaadmin /opt/MONGO_LOCAL
+   mkdir /opt/MONGO_LOCAL/girder_db```
 
 ### Default User and password
 on initial creation, the userid=admin and password=password
-Obviously, this is not very secure.  So we <i>strongly</i> recommend you change
-this as follows
+Obviously, this is not very secure.  So we <i>strongly</i> recommend you change this as follows
 
 However, when you do this, you must also specify the user ID and password when
 you do any upgrades to the main docker image.
 
-![](assets\DSA_Installation-694b1617.png)assets/DSA_Installation-694b1.png
+![](assets\DSA_Installation-694b1617.png)
+
+![](assets/DSA_Installation-694b1.png)
 
 ## Creating a start up script
 So in my use case, I am overriding the default directories girder tries to put "stuff";  so I wrote a one line bash script that will start the DSA, so below is the simplest script, I am calling it docker_local_start.sh and placing it on /opt/Histomics_SRC/ansible
 
-python deploy_docker.py start --db=/opt/MONGO_LOCAL/girder_db --assetstore=/opt/LOCAL_ASSETSTORE/girderAssetStore --logs=/opt/Histomics_DATA/logs
+    python deploy_docker.py start --db=/opt/MONGO_LOCAL/girder_db --assetstore=/opt/LOCAL_ASSETSTORE/girderAssetStore --logs=/opt/Histomics_Data/logs
 
 
 ## Stopping/starting/updating docker
@@ -200,7 +212,7 @@ bash docker_local_start.sh
 So here's what happens when something goes wrong...
 ![](assets/DSA_Installation-b1b9e.png)
 
-It's a simple problem, It's complaining it can/t write to /opt/Histomics_DATA  ... as it turns out above we created /opt/Histomics_Data  (i.e. I goofed the capitalization).
+It's a simple problem, It's complaining it can/t write to /opt/Histomics_Data  ... as it turns out above we created /opt/Histomics_DATA  (i.e. I goofed the capitalization).
 
 So to clean things up, I did.
 
@@ -217,10 +229,10 @@ Apparently two of the containers had started during my previous failed attempt, 
 
 ![](assets/DSA_Installation-3618b.png)
 
-Which ideally should then produce something like the above image..i.e. lots of 'ok'
+Which ideally should then produce something like the above image..i.e. lots of 'ok's
 
 
-So now the good part, it's running on my server on port 8080
+## So now the good part, it's running on my server on port 8080
 
 ![](assets/DSA_Installation-8aa23.png)
 
@@ -231,8 +243,13 @@ And if I peek in the directories, I can see that the logs were created, and so w
 
 
 
+### Another sample docker_local_start.sh script
 
-python deploy_docker.py start --retry --password= --db=/opt/MONGO_LOCAL/girder_db --assetstore=/opt/LOCAL_ASSETSTORE/girderAssetStore1 --logs=/opt/Histomics_DATA/logs --port=8080 -e /SLIDES:BOHR_SLIDES:ro  -e /TCGA_MIRROR:TCGA_MIRROR:ro  -e /opt/LOCAL_ASSETSTORE/SRC_GLOBAL_SCRATCH/DCM_STORAGE:LOCAL_DCM_STORAGE:rw
+This one mounts a couple of more directories, and also prompts for the user
+to enter a password if they overwrote the default password
+
+
+    python deploy_docker.py start --retry --password= --db=/opt/MONGO_LOCAL/girder_db --assetstore=/opt/LOCAL_ASSETSTORE/girderAssetStore1 --logs=/opt/Histomics_DATA/logs --port=8080 -e /SLIDES:BOHR_SLIDES:ro  -e /TCGA_MIRROR:TCGA_MIRROR:ro  -e /opt/LOCAL_ASSETSTORE/SRC_GLOBAL_SCRATCH/DCM_STORAGE:LOCAL_DCM_STORAGE:rw
 
 # Mounting File Systems within a docker container
 
@@ -247,6 +264,8 @@ still reside on the original file system but are indexed in Girder.  This can ha
 a number of advantages as we leave the original files untouched.  This made it easier
 for me to backup my slide files and also useful for testing.  
 
+
+##### TO DO
 Viewing Label Images  **WARNING**
 Experimental-- view macro images
 
@@ -260,10 +279,10 @@ git checkout show-label-images
 Should be embedded to make this work in the tag
 {"images": ["macro", "label"]}
 
-assets/DSA_Installation-c8460.png
+![](assets/DSA_Installation-c8460.png)
 
 
-assets/DSA_Installation-c8460.png
+![](assets/DSA_Installation-c8460.png)
 
 
 ## Ubuntu 14.04 Notes
@@ -271,8 +290,3 @@ assets/DSA_Installation-c8460.png
 Please note on Ubuntu 14.04 it's docker not docker.io
 I also upgraded pip after installing it, as it indicated I was using an older
 version.
-
-
-
-###TO DO
-  Add Ubuntu 14.04 instructions/modifications
