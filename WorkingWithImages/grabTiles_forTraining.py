@@ -1,15 +1,15 @@
 import os, sys, json, glob
 import numpy as np
-import matplotlib.pyplot as plt
 import girder_client
 import histomicstk.utils as htk_utils
 from cStringIO import StringIO
-from IPython.display import Image as IPImage  ## PIL has an Image Function as well, so want to keep these distinct
-import histomicstk.utils as htk_utils
 import io, random
-from PIL import Image, ImageDraw
 import logging
 from os.path import join as opj
+from PIL import Image
+
+cohort = "gbm"
+
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 gc = girder_client.GirderClient(apiUrl="http://candygram.neurology.emory.edu:8080/api/v1")
@@ -18,7 +18,6 @@ gc = girder_client.GirderClient(apiUrl="http://candygram.neurology.emory.edu:808
 tcgaCohorts = gc.get('/tcga/cohort')  ## This gets me the folderID for all the TCGA cohorts
 cohortInfo = dict([(x['name'],x['_id']) for x in tcgaCohorts['data']])
 
-cohort = "gbm"
 slidesInCohort = gc.get('/tcga/cohort/%s/images?limit=%d' % (cohortInfo[cohort],2000))
 ## PROBABLY should write a generator to grab all the slides instead of just specifying some giant number
 
@@ -93,20 +92,32 @@ totalSlides = len(dxSlides)
 
 for idx,sl in enumerate(dxSlides):
     ## Split into training/test subdirs
-    if( idx/float(totalSlides) < 0.8):
+#    if( idx/float(totalSlides) < 0.8):
+#        opd = "/data/train/%s" % cohort
+#    else:
+#        opd = "/data/test/%s" % cohort
+
+## I am assuming 80% i.e. 16/20 = 0.8...
+
+    if( (idx % 20)  <  16 ):
         opd = "/data/train/%s" % cohort
     else:
         opd = "/data/test/%s" % cohort
+
+    if not os.path.isdir(opd):
+        os.makedirs(opd)
+
+
         print("Outputing test set now!!")
     slideBaseName = sl['name'].split(".")[0]
     tilesFound = glob.glob(opd+"/%s*png" %  (slideBaseName))
     #print(tilesDone)
 
-    tilesWanted = 15
+    tilesWanted = 10
     tilesToGenerate = tilesWanted - len(tilesFound)
-    print(tilesToGenerate)
+    #print(tilesToGenerate)
     if (tilesToGenerate) > 0:
-        grabTilesFromImage( sl, opd, lowResMag=1.25, outputRes=20, tilesToOutput=tilesToGenerate,debug=True)
+        grabTilesFromImage( sl, opd, lowResMag=0.625, outputRes=20, tilesToOutput=tilesToGenerate,debug=True)
     else:
         stats = "Processed %d images" % idx
         LinePrinter(stats)
