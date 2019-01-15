@@ -9,4 +9,4 @@ This project comprises three related efforts:
 2. Girder - an underlying frameworks providing APIs for data management, authentication, and analysis job and resource management. 
 3. HistomicsTK - a python algorithm library for pathology image analysis.
 
-See the [DSA installation guide](https://github.com/DigitalSlideArchive/digitalslidearchive.info/blob/master/DSA_Girder_Installation/DSA_Installation.md) to get started with setting up your own local DSA instance.
+See the [DSA installation guide](https://github.com/DigitalSlideArchive/digitalslidearchive.info/blob/master/DSA_Girder_Installation/DSA_Installation.md) to get started with setting up your own local DSA instance. HistomicsTK can be used as a DSA plugin, or as a stand-alone python package. See the [HistomicsTK documentation](https://digitalslidearchive.github.io/HistomicsTK/) for information on installing and using HistomicsTK.
