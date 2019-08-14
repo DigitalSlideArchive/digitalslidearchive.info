@@ -12,7 +12,21 @@ Following are few useful data management tasks (written in Python), which enable
 
 Objective: Functions/Tools/Tasks to manipulate the following objects in the DSA Platform
 
-# System
+Digital Slide Archive Platform (Objectwise) Documentation (<http://digitalslidearchive.emory.edu:8080/girder_root/>)
+
+# Installation
+
+# System - General
+
+# System - Admin Console
+
+# System - Collection
+
+# System - Users
+
+# System - Groups
+
+DSA API Documentation (<http://digitalslidearchive.emory.edu:8080/api/v1>)
 
 # Items
 
@@ -31,6 +45,8 @@ Objective: Functions/Tools/Tasks to manipulate the following objects in the DSA 
 # Worker
 
 # large_image
+
+# Girder
 
 # HistomicsTK
 
@@ -242,7 +258,11 @@ Errors Encountered: No. of slides--- unnamed tag 'meta', was unable to retrieve 
        7         slidesTagged.append(sld)
  KeyError: 'meta'</module></ipython-input-22-bdda789adf8f>
 
-````````````````````
+``````````````
+```
+
+```
+
 ```
 
 ```
@@ -255,7 +275,10 @@ get set of slides that have the tags of interest works as intended
 
 ![alt text](https://github.com/al97/Girder-Documentation/blob/master/Screen%20Shot%202018-07-30%20at%2011.33.40%20AM.png)
 
-````
+`
+
+```
+
 ```
 
 `ftLabel = ['Yes','No'] classes = [list(y for y in x) for x in itertools.product(ftLabel, ftLabel, ftLabel)] counts = [0]*len(classes) for sld in slidesTagged: tc = sld['meta']['tags'] for i in range(len(counts)): if all (tc[tags[j]]==classes[i][j] for j in range(len(tags))): counts[i] += 1 continue`
@@ -264,9 +287,9 @@ get the count for all the possible classes (permuation of tag values). No output
 
 ![alt text](https://github.com/al97/Girder-Documentation/blob/master/Screen%20Shot%202018-07-30%20at%2011.34.44%20AM.png)
 
-``
-````
+`` ` ``
 
+```
 `data = np.hstack((np.array([range(len(classes))]).T, np.array(classes), np.array([counts]).T)) titles = np.hstack((np.array(['Class ']), np.array(tags), np.array(['Count']))) df = pd.DataFrame(data) df = pd.DataFrame(data, columns=titles) display(HTML(df.to_html(index=False)))`
 
 use pandas to display the results of number of slides for each class, works as intended
@@ -275,7 +298,9 @@ use pandas to display the results of number of slides for each class, works as i
 
 Objective: Download the images, which have specific tags, eg. "LabelFlag"
 
-``````````````````````````
+```````````````````````
+```
+
 `from pprint import pprint sourceFldID = '5ae351e792ca9a0020d95e50' slides_lbd = [] for sld in gc.listItem(sourceFldID): if sld.has_key('meta') and \ sld['meta'].has_key('tags') and \ sld['meta']['tags'].has_key('LabelFlag') and \ sld['meta']['tags']['LabelFlag']: slides_lbd.append(sld)`
 
 ![alt text](Screen%20Shot%202018-07-30%20at%2011.40.54%20AM.png)
@@ -866,11 +891,11 @@ return resourceList
 ```````````````````````
 ````````````````````````
 `````````````````````````
-``````````````````````````
 
+````` ``````````````````````
 ```` ``
 ```
-````
+`````
 
 ```
 `
