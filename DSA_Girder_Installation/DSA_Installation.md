@@ -3,7 +3,7 @@
 ### Installation Requirements:
 
 1) Root access  
-2) Ubuntu 16.04 Machine (although very likely other platforms will work, testing coming as requested)
+2) Ubuntu 16.04 Machine (although very likely other platforms will work, testing coming as requested).  We have got this working on a Mac as well using Docker [ADD HREF]
 
 ### Further notes on Installation
 
@@ -16,22 +16,29 @@ as they are prebuilt when you pull them from Docker Hub.
 
 We recommend upgrading the system.
 
-
-## TO DO: Fix this image!
-![](assets\DSA_Installation-b5f65.png)
-
-
 ```sudo apt-get update && sudo apt-get upgrade```
 
-I created a default username (dsaadmin) during my initial installation with sudo access.  
+I created a default username (dsaadmin) during my initial installation with sudo access.  You can use whatever user you want, but they will need sudo access to get things properly configured.
 
-```bash
+
+```
+bash  # My distro for some reason doesn't run BASH on startup for new users..
 sudo useradd dsaadmin
 sudo passwd dsaadmin
 ##Type in a password for the dsaadmin user
 sudo usermod -a -G sudo dsaadmin```
 
+![](assets/DSA_Installation-a6ce7.png)
+
 You then want to logout and log in as the dsaadmin usermod
+
+*** Optional/Bug Fix ***
+For some reason, when I create the user as above, it is not creating creating a home directory, and it's also not making bash the default login shell.  
+
+What I have done is run mkhomedir_helper so it creates my home directory.  I've also had to go in and edit /etc/passwd and amend it so it has the dsaadmin user default to running bash; originally it just said /home/dsaadmin: (i.e. nothing after the colon)
+
+![](assets/DSA_Installation-2a655.png)
+![](assets/DSA_Installation-f74da.png)
 
 ### Step 2
 Install Docker:  These instructions assume your using Ubuntu 16.04.
@@ -60,7 +67,7 @@ sudo pip install --upgrade pip
 pip install docker-py ansible --user
 ```
 
-## Please note, you need to be a member of the docker group in order to check the status of docker containers; also you have to LOG OFF and then LOG BACK IN after adding the admin user to the docker group in order for the permissions to be properly updated
+## Please note, you need to be a member of the docker group in order to check the status of docker containers; also you have to LOG OFF and then LOG BACK IN after adding the admin user to the docker group in order for the permissions to be properly updated.  If you forget this step, or forget to logout, you'll see something like below where it says cannot connect to docker daemon.
 
 ~~~
 sudo usermod -a -G docker dsaadmin
@@ -75,7 +82,7 @@ docker ps
 ![](assets\DSA_Installation-9bf6e7b7.png)
 
 The docker containers are actually running, but the current user (dagutman) doesn't
-have access to connect to the docker containers.
+have access to connect to the docker containers.  
 
 ~~~~
 sudo usermod -a -G docker dsaadmin
@@ -92,13 +99,13 @@ directories you create for these installation files
 
 ~~~~
 cd /opt
-sudo mkdir /opt/Histomics_SRC
-sudo chown dsaadmin:dsaadmin Histomics_SRC
+sudo mkdir /opt/Histomics_Src
+sudo chown dsaadmin:dsaadmin Histomics_Src
 
 #now clone the repo
-git clone https://github.com/DigitalSlideArchive/HistomicsTK.git Histomics_SRC/
+git clone https://github.com/DigitalSlideArchive/HistomicsTK.git Histomics_Src/
 
-cd Histomics_SRC
+cd Histomics_Src
 cd ansible
 ~~~~
 
@@ -124,7 +131,9 @@ python deploy_docker.py start
 ![](assets/DSA_Installation-e09fa.png)
 
 
-### Where's my stuff being stored??
+If you connect to http://localhost:8080 or http://myserver:8080 you can now start and browse.... however keep reading..
+
+# Where's my stuff being stored??
 So by default, when you start a new DSA/Girder instance it will create the following directories.
 
 assetstore -> Where girder stores items/files/"stuff" that I've uploaded  
@@ -138,36 +147,31 @@ So I prefer to specify where the logs, Mongo database, and assetstores (storage 
 ~/.histomicstk so in our case if I look in
 /home/dsaadmin/.histomicstk
 
-
-
 The Mongo Database should be stored in a directory outside of the actual docker
-container, as an example I am storing it in /opt/MONGO_LOCAL
+container, as an example I am storing it in /opt/MongoLocal
 
-```sudo mkdir /opt/MONGO_LOCAL
-sudo chown dsaadmin /opt/MONGO_LOCAL
-mkdir /opt/MONGO_LOCAL/logs```
 
-## The log directories will be stored in /opt/Histomics_Data/logs which contains useful info  for debugging
+## Create a directory for Mongo
+
+```sudo mkdir /opt/MongoLocal
+sudo chown dsaadmin /opt/MongoLocal
+mkdir /opt/MongoLocal/girder_db```
+
+## The log directories will be stored in /opt/HistomicsData/logs which contains useful info  for debugging
 
 ~~~
-sudo mkdir /opt/Histomics_Data
-sudo chmod g+s /opt/Histomics_Data
-sudo chown dsaadmin /opt/Histomics_Data
+sudo mkdir /opt/HistomicsData
+sudo chmod g+s /opt/HistomicsData
+sudo chown dsaadmin /opt/HistomicsData
 ~~~
 
 ## Create assetstore directory
 
-~~~
-sudo mkdir /opt/LOCAL_ASSETSTORE  
-sudo chown dsaadmin /opt/LOCAL_ASSETSTORE
-mkdir /opt/LOCAL_ASSETSTORE/girderAssetStore
-~~~
+```
+sudo mkdir /opt/LocalAssetstore  
+sudo chown dsaadmin /opt/LocalAssetstore
+mkdir /opt/LocalAssetstore/girderAssetStore  ```
 
-## Create a directory for Mongo
-
-```sudo mkdir /opt/MONGO_LOCAL
-   sudo chown dsaadmin /opt/MONGO_LOCAL
-   mkdir /opt/MONGO_LOCAL/girder_db```
 
 ### Default User and password
 on initial creation, the userid=admin and password=password
@@ -176,14 +180,16 @@ Obviously, this is not very secure.  So we <i>strongly</i> recommend you change 
 However, when you do this, you must also specify the user ID and password when
 you do any upgrades to the main docker image.
 
-![](assets\DSA_Installation-694b1617.png)
+![](assets/DSA_Installation-617a3.png)
 
-![](assets/DSA_Installation-694b1.png)
+### Startup script examples
+
+
 
 ## Creating a start up script
-So in my use case, I am overriding the default directories girder tries to put "stuff";  so I wrote a one line bash script that will start the DSA, so below is the simplest script, I am calling it docker_local_start.sh and placing it on /opt/Histomics_SRC/ansible
+So in my use case, I am overriding the default directories girder tries to put "stuff";  so I wrote a one line bash script that will start the DSA, so below is the simplest script, I am calling it docker_local_start.sh and placing it on /opt/HistomicsSrc/ansible
 
-    python deploy_docker.py start --db=/opt/MONGO_LOCAL/girder_db --assetstore=/opt/LOCAL_ASSETSTORE/girderAssetStore --logs=/opt/Histomics_Data/logs
+    python deploy_docker.py start --db=/opt/MongoLocal/girder_db --assetstore=/opt/LocalAssetstore/girderAssetStore --logs=/opt/HistomicsData/logs
 
 
 ## Stopping/starting/updating docker
@@ -214,12 +220,28 @@ So here's what happens when something goes wrong...
 
 It's a simple problem, It's complaining it can/t write to /opt/Histomics_Data  ... as it turns out above we created /opt/Histomics_DATA  (i.e. I goofed the capitalization).
 
+## Another start up issue.. again I goofed up the paths
+
+![](assets/DSA_Installation-2b855.png)
+
+
+
+
 So to clean things up, I did.
 
 ~~~~~
 python deploy_docker.py rm
 bash docker_local_start.sh
 ~~~~~
+
+![](assets/DSA_Installation-ee033.png)
+
+In this case, I forgot to set the permissions as rw for the logs, so got a similar issue.  I changed the permission of /opt/Histomics_Data but forgot to set it for the logs subdirectory.
+
+![](assets/DSA_Installation-7a0a3.png)
+
+
+
 
 If it works, you should see something like below:
 
@@ -238,8 +260,8 @@ Which ideally should then produce something like the above image..i.e. lots of '
 
 And if I peek in the directories, I can see that the logs were created, and so we seem to be off to a good start...
 
+![](assets/DSA_Installation-451f9.png)
 
-![](assets/DSA_Installation-10bf4.png)
 
 
 

@@ -57,4 +57,5 @@ Once the images are pulled, you can simply Type
 python deploy_docker.py start
 ```
 
+The system will start as http://localhost:8080/
 
